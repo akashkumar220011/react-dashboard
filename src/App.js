@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Dashboard from './Dashboard';
 
-function App() {
+const App = () => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/item/get');
+      const result = await response.json();
+      console.log("my data is rendering", result);
+      setData(result.data); // Update state with the fetched data
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    
+    fetchData();
+  }, []);
+  useEffect(()=>{
+    console.log("data",data);
+  },[data]) ;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Dashboard data={data} setData={setData} /> 
     </div>
   );
 }
